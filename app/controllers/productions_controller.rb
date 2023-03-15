@@ -7,7 +7,7 @@ class ProductionsController < ApplicationController
        
         production = Production.find_by(id: params[:id])
         if production
-            render json: production, status: :ok
+            render json: production, only: [:title, :genre,:budget, :director], methods: [:title_director],status: :ok
         else
             render json: {error:"Production not found"}, status: :notfound
         end
@@ -16,6 +16,18 @@ class ProductionsController < ApplicationController
         production = Production.create(production_params)
 
         render json: production, status: :created
+
+    end
+    def destroy
+                # Find the production that needs deleting
+                production = Production.find_by(id: params[:id])
+                if production
+                     # delete it
+                    production.destroy
+                    head :no_content
+                else
+                    render json: {error:"Production not found"}, status: :notfound
+                end
 
     end
     def update
